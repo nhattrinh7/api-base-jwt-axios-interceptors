@@ -23,6 +23,7 @@ const MOCK_DATABASE = {
 
 const login = async (req, res) => {
   try {
+    console.log('req.body', req.body)
     if (req.body.email !== MOCK_DATABASE.USER.EMAIL || req.body.password !== MOCK_DATABASE.USER.PASSWORD) {
       res.status(StatusCodes.FORBIDDEN).json({ message: 'Your email or password is incorrect!' })
       return
@@ -37,7 +38,7 @@ const login = async (req, res) => {
 
     // Tạo ra 2 loại token là Access token và Refresh token để trả về FE
     const accessToken = await JwtProvider.generateToken(
-      userInfo, ACCESS_TOKEN_SECRET_SIGNATURE, 5
+      userInfo, ACCESS_TOKEN_SECRET_SIGNATURE, '1h'
     )
 
     const refreshToken = await JwtProvider.generateToken(
@@ -56,8 +57,8 @@ const login = async (req, res) => {
     // Trả về thông tin user và các token cho FE cần lưu vào Localstorage
     res.status(StatusCodes.OK).json({
       ...userInfo,
-      accessToken,
-      refreshToken
+      // accessToken,
+      // refreshToken
     })
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error)
